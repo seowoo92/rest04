@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #FAF6F0;
+  --text: #2A2D43;
+  --coral: #FF6F5E;
+  --mustard: #F5B23E;
+  --card: #FFFFFF;
+  --divider: #ECE6DC;
+}
+
+.dark {
+  --bg: #1E2030;
+  --text: #F5F1EA;
+  --coral: #FF7E6E;
+  --mustard: #F7C04A;
+  --card: #2A2D43;
+  --divider: #3A3E55;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Sans KR', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+section[id] {
+  scroll-margin-top: 64px;
+}
+
+div[id^="about-"] {
+  scroll-margin-top: 80px;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes bgScroll {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes textFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 0.08; }
+}
+
