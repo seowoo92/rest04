@@ -114,6 +114,13 @@ update public.r04_profiles set role = 'admin'
 where id = '6b393893-7db3-44e9-bdbb-5c2d8e728a41';
 ```
 
+### 닉네임 변경 후 기존 게시글/댓글 소급 반영
+`author_name`은 작성 시점 닉네임을 복사 저장하므로 닉네임 변경 시 자동 반영 안 됨. SQL로 직접 수정 필요:
+```sql
+update public.r04_posts set author_name = '새닉네임' where author_id = 'uuid';
+update public.r04_comments set author_name = '새닉네임' where author_id = 'uuid';
+```
+
 ## Supabase DB 스키마 (r04_ 접두어)
 
 ### 테이블 목록
