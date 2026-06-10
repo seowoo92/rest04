@@ -1,10 +1,12 @@
+import { useTheme } from '../context/ThemeContext';
+
 export default function PageHeader({ category, title, bgText }) {
+  const { dark } = useTheme();
   return (
     <div
       className="pt-16 pb-0 w-full overflow-hidden relative"
       style={{ backgroundColor: 'var(--bg)', height: '128px' }}
     >
-      {/* 배경 대형 텍스트 */}
       <span
         className="font-bold text-6xl whitespace-nowrap pointer-events-none select-none"
         style={{
@@ -12,7 +14,7 @@ export default function PageHeader({ category, title, bgText }) {
           right: '32px',
           top: '50%',
           transform: 'translateY(-50%)',
-          color: 'rgba(42,45,67,0.09)',
+          color: dark ? 'rgba(255,255,255,0.07)' : 'rgba(42,45,67,0.09)',
           whiteSpace: 'nowrap',
           pointerEvents: 'none',
           userSelect: 'none',
@@ -20,8 +22,6 @@ export default function PageHeader({ category, title, bgText }) {
       >
         {bgText}
       </span>
-
-      {/* 전경 텍스트 */}
       <div style={{ position: 'absolute', top: '50%', left: '32px', transform: 'translateY(-50%)' }}>
         <p
           className="text-sm font-bold uppercase mb-2"
@@ -45,9 +45,7 @@ export default function PageHeader({ category, title, bgText }) {
           {title}
         </h1>
       </div>
-
-      {/* 하단 구분선 */}
-      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '0.5px', background: 'rgba(42,45,67,0.12)' }} />
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '0.5px', background: dark ? 'rgba(255,255,255,0.08)' : 'rgba(42,45,67,0.12)' }} />
       <div style={{ position: 'absolute', bottom: 0, left: '32px', width: '40px', height: '2px', background: '#F5B23E' }} />
     </div>
   );
