@@ -20,7 +20,7 @@ export default function FreeDetail() {
 
   useEffect(() => {
     supabase
-      .from('posts')
+      .from('r04_posts')
       .select('*')
       .eq('id', id)
       .single()
@@ -31,7 +31,7 @@ export default function FreeDetail() {
 
   const handleDelete = async () => {
     if (!window.confirm('게시글을 삭제하시겠습니까?')) return
-    await supabase.from('posts').delete().eq('id', id)
+    await supabase.from('r04_posts').delete().eq('id', id)
     navigate('/board/free')
   }
 

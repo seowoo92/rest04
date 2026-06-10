@@ -19,8 +19,9 @@ export default function FreeList() {
 
   useEffect(() => {
     supabase
-      .from('posts')
+      .from('r04_posts')
       .select('id, title, author_name, created_at')
+      .eq('category', 'free')
       .order('created_at', { ascending: false })
       .then(({ data }) => { setPosts(data || []); setLoading(false) })
   }, [])

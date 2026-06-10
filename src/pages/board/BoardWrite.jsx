@@ -10,16 +10,15 @@ export default function BoardWrite() {
   const { id } = useParams()
   const navigate = useNavigate()
   const location = useLocation()
-  const { user, isAdmin } = useAuth()
+  const { user, profile, isAdmin } = useAuth()
 
   const isNotice = location.pathname.startsWith('/board/notice')
   const isEdit = Boolean(id)
-  const table = isNotice ? 'notices' : 'posts'
+  const category = isNotice ? 'notice' : 'free'
   const listPath = isNotice ? '/board/notice' : '/board/free'
 
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
-  const [authorName, setAuthorName] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
 
@@ -32,10 +31,10 @@ export default function BoardWrite() {
   // Load existing post for edit
   useEffect(() => {
     if (!isEdit) return
-    supabase.from(table).select('*').eq('id', id).single().then(({ data }) => {
-      if (data) { setTitle(data.title); setContent(data.content); setAuthorName(data.author_name || '') }
+    supabase.from('r04_posts').select('*').eq('id', id).single().then(({ data }) => {
+      if (data) { setTitle(data.title); setContent(data.content) }
     })
-  }, [isEdit, id, table])
+  }, [isEdit, id])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -45,17 +44,15 @@ export default function BoardWrite() {
 
     let err
     if (isEdit) {
-      const update = { title: title.trim(), content: content.trim(), updated_at: new Date().toISOString() }
-      if (!isNotice) update.author_name = authorName.trim() || '익명';
-      ({ error: err } = await supabase.from(table).update(update).eq('id', id))
+      ;({ error: err } = await supabase
+        .from('r04_posts')
+        .update({ title: title.trim(), content: content.trim(), updated_at: new Date().toISOString() })
+        .eq('id', id))
     } else {
-      const insert = {
-        title: title.trim(),
-        content: content.trim(),
-        author_id: user.id,
-        ...(!isNotice && { author_name: authorName.trim() || '익명' }),
-      }
-      ;({ error: err } = await supabase.from(table).insert(insert))
+      const authorName = profile?.nickname || user?.email?.split('@')[0] || '회원'
+      ;({ error: err } = await supabase
+        .from('r04_posts')
+        .insert({ category, title: title.trim(), content: content.trim(), author_id: user.id, author_name: authorName }))
     }
 
     setSubmitting(false)
@@ -73,21 +70,6 @@ export default function BoardWrite() {
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid var(--divider)', backgroundColor: 'var(--card)' }}>
           <form onSubmit={handleSubmit} className="p-8 flex flex-col gap-5">
-            {!isNotice && (
-              <div>
-                <label className="block text-xs font-medium mb-2" style={{ color: 'var(--text)', opacity: 0.55 }}>작성자 이름</label>
-                <input
-                  type="text"
-                  value={authorName}
-                  onChange={e => setAuthorName(e.target.value)}
-                  placeholder="표시될 이름 (비워두면 익명)"
-                  maxLength={20}
-                  className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-                  style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--divider)', color: 'var(--text)' }}
-                />
-              </div>
-            )}
-
             <div>
               <label className="block text-xs font-medium mb-2" style={{ color: 'var(--text)', opacity: 0.55 }}>제목</label>
               <input

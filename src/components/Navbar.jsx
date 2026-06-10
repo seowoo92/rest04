@@ -46,7 +46,7 @@ export default function Navbar({ dark, toggleDark }) {
   const [activeMenu, setActiveMenu] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [expandedMobile, setExpandedMobile] = useState(null);
-  const { user, signOut } = useAuth();
+  const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -187,7 +187,7 @@ export default function Navbar({ dark, toggleDark }) {
                 <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs"
                   style={{ color: 'var(--text)', opacity: 0.6 }}>
                   <User size={13} />
-                  <span className="max-w-[120px] truncate">{user.email}</span>
+                  <span className="max-w-[120px] truncate">{profile?.nickname || user.email}</span>
                 </div>
                 <button
                   onClick={handleSignOut}
@@ -281,7 +281,7 @@ export default function Navbar({ dark, toggleDark }) {
             <div className="mt-3 flex flex-col gap-2">
               <div className="flex items-center gap-1.5 text-xs px-1" style={{ color: 'var(--text)', opacity: 0.5 }}>
                 <User size={12} />
-                <span className="truncate">{user.email}</span>
+                <span className="truncate">{profile?.nickname || user.email}</span>
               </div>
               <button
                 onClick={handleSignOut}

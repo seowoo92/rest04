@@ -20,7 +20,7 @@ export default function NoticeDetail() {
 
   useEffect(() => {
     supabase
-      .from('notices')
+      .from('r04_posts')
       .select('*')
       .eq('id', id)
       .single()
@@ -29,7 +29,7 @@ export default function NoticeDetail() {
 
   const handleDelete = async () => {
     if (!window.confirm('공지사항을 삭제하시겠습니까?')) return
-    await supabase.from('notices').delete().eq('id', id)
+    await supabase.from('r04_posts').delete().eq('id', id)
     navigate('/board/notice')
   }
 

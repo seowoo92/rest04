@@ -19,8 +19,9 @@ export default function NoticeList() {
 
   useEffect(() => {
     supabase
-      .from('notices')
+      .from('r04_posts')
       .select('id, title, created_at')
+      .eq('category', 'notice')
       .order('created_at', { ascending: false })
       .then(({ data }) => { setNotices(data || []); setLoading(false) })
   }, [])
