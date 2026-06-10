@@ -7,11 +7,10 @@ import { useTheme } from '../context/ThemeContext';
 export default function Layout({ title, children }) {
   const { dark, toggleDark } = useTheme();
   const { pathname } = useLocation();
-
   return (
     <>
       {pathname !== '/' && <DarkGlow />}
-      <div style={{ minHeight: '100vh', position: 'relative' }}>
+      <div style={{ backgroundColor: 'var(--bg)', minHeight: '100vh' }}>
         <Navbar dark={dark} toggleDark={toggleDark} />
         <main
           className="min-h-screen"

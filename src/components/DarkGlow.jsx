@@ -24,7 +24,7 @@ export default function DarkGlow() {
           left: '15%',
           top: '15%',
           background: 'radial-gradient(ellipse at center, rgba(255,111,94,0.18), transparent 70%)',
-          animation: 'glowFloat1 9s ease-in-out infinite',
+          animation: 'glowFloat1 14s ease-in-out infinite',
         }}
       />
       <div
@@ -36,7 +36,7 @@ export default function DarkGlow() {
           right: '10%',
           bottom: '15%',
           background: 'radial-gradient(ellipse at center, rgba(245,178,62,0.14), transparent 70%)',
-          animation: 'glowFloat2 11s ease-in-out infinite',
+          animation: 'glowFloat2 18s ease-in-out infinite',
         }}
       />
     </div>
