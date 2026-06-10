@@ -10,22 +10,24 @@ export default function Layout({ title, children }) {
 
   return (
     <>
-      <Navbar dark={dark} toggleDark={toggleDark} />
       {pathname !== '/' && <DarkGlow />}
-      <main
-        className="min-h-screen"
-        style={{ paddingTop: '64px', backgroundColor: 'var(--bg)', position: 'relative', zIndex: 1 }}
-      >
-        {children ?? (
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
-            <h1 className="text-2xl font-bold mb-4" style={{ color: 'var(--text)' }}>
-              {title}
-            </h1>
-            <p style={{ color: 'var(--text)', opacity: 0.5 }}>준비 중입니다.</p>
-          </div>
-        )}
-      </main>
-      <Footer />
+      <div style={{ minHeight: '100vh', position: 'relative', zIndex: 1 }}>
+        <Navbar dark={dark} toggleDark={toggleDark} />
+        <main
+          className="min-h-screen"
+          style={{ paddingTop: '64px' }}
+        >
+          {children ?? (
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+              <h1 className="text-2xl font-bold mb-4" style={{ color: 'var(--text)' }}>
+                {title}
+              </h1>
+              <p style={{ color: 'var(--text)', opacity: 0.5 }}>준비 중입니다.</p>
+            </div>
+          )}
+        </main>
+        <Footer />
+      </div>
     </>
   );
 }
