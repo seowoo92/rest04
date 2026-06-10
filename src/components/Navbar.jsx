@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Sun, Moon, Menu, X, ChevronDown } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Sun, Moon, Menu, X, ChevronDown, LogIn, LogOut, User } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const menuItems = [
   {
@@ -17,6 +18,13 @@ const menuItems = [
     submenu: [
       { label: '이용 방법', to: '/services/how' },
       { label: '전체보기', to: '/services' },
+    ],
+  },
+  {
+    label: '게시판',
+    submenu: [
+      { label: '공지사항', to: '/board/notice' },
+      { label: '자유게시판', to: '/board/free' },
     ],
   },
   {
@@ -38,6 +46,14 @@ export default function Navbar({ dark, toggleDark }) {
   const [activeMenu, setActiveMenu] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [expandedMobile, setExpandedMobile] = useState(null);
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+    setMobileOpen(false);
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -155,7 +171,7 @@ export default function Navbar({ dark, toggleDark }) {
           </nav>
 
           {/* Desktop right */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-2">
             <button
               onClick={toggleDark}
               className="p-2 rounded-full transition-colors duration-200"
@@ -166,13 +182,30 @@ export default function Navbar({ dark, toggleDark }) {
             >
               {dark ? <Sun size={18} /> : <Moon size={18} />}
             </button>
-            <Link
-              to="/contact"
-              className="px-5 py-2 rounded-full text-sm font-semibold text-white transition-opacity duration-200 hover:opacity-85"
-              style={{ backgroundColor: 'var(--coral)', textDecoration: 'none' }}
-            >
-              도움 요청하기
-            </Link>
+            {user ? (
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs"
+                  style={{ color: 'var(--text)', opacity: 0.6 }}>
+                  <User size={13} />
+                  <span className="max-w-[120px] truncate">{user.email}</span>
+                </div>
+                <button
+                  onClick={handleSignOut}
+                  className="flex items-center gap-1 px-4 py-2 rounded-full text-sm font-medium transition-opacity hover:opacity-75"
+                  style={{ border: '1px solid var(--divider)', color: 'var(--text)', background: 'none', cursor: 'pointer' }}
+                >
+                  <LogOut size={14} /> 로그아웃
+                </button>
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold transition-opacity hover:opacity-85"
+                style={{ backgroundColor: 'var(--coral)', color: '#ffffff', textDecoration: 'none' }}
+              >
+                <LogIn size={14} /> 로그인
+              </Link>
+            )}
           </div>
 
           {/* Mobile buttons */}
@@ -244,14 +277,30 @@ export default function Navbar({ dark, toggleDark }) {
               </div>
             </div>
           ))}
-          <Link
-            to="/contact"
-            onClick={() => setMobileOpen(false)}
-            className="block mt-3 w-full py-2.5 rounded-full text-sm font-semibold text-white text-center"
-            style={{ backgroundColor: 'var(--coral)', textDecoration: 'none' }}
-          >
-            도움 요청하기
-          </Link>
+          {user ? (
+            <div className="mt-3 flex flex-col gap-2">
+              <div className="flex items-center gap-1.5 text-xs px-1" style={{ color: 'var(--text)', opacity: 0.5 }}>
+                <User size={12} />
+                <span className="truncate">{user.email}</span>
+              </div>
+              <button
+                onClick={handleSignOut}
+                className="w-full py-2.5 rounded-full text-sm font-semibold flex items-center justify-center gap-1.5"
+                style={{ border: '1px solid var(--divider)', color: 'var(--text)', background: 'none', cursor: 'pointer' }}
+              >
+                <LogOut size={14} /> 로그아웃
+              </button>
+            </div>
+          ) : (
+            <Link
+              to="/login"
+              onClick={() => setMobileOpen(false)}
+              className="mt-3 flex items-center justify-center gap-1.5 w-full py-2.5 rounded-full text-sm font-semibold text-white"
+              style={{ backgroundColor: 'var(--coral)', textDecoration: 'none' }}
+            >
+              <LogIn size={14} /> 로그인
+            </Link>
+          )}
         </div>
       )}
     </header>
