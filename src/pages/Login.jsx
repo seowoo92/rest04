@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Link, useLocation } from 'react-router-dom'
-import { Mail, Lock, LogIn } from 'lucide-react'
+import { Mail, Lock, LogIn, User } from 'lucide-react'
 import Layout from '../components/Layout'
 import { useAuth } from '../context/AuthContext'
 
@@ -8,6 +8,7 @@ export default function Login() {
   const [mode, setMode] = useState('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [nickname, setNickname] = useState('')
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -24,7 +25,7 @@ export default function Login() {
 
     const { error: err } = mode === 'login'
       ? await signIn(email, password)
-      : await signUp(email, password)
+      : await signUp(email, password, nickname.trim() || email.split('@')[0])
 
     setSubmitting(false)
 
@@ -43,6 +44,7 @@ export default function Login() {
       setMode('login')
       setEmail('')
       setPassword('')
+      setNickname('')
     } else {
       navigate(from, { replace: true })
     }
@@ -57,6 +59,7 @@ export default function Login() {
     setMode(m => m === 'login' ? 'signup' : 'login')
     setError('')
     setMessage('')
+    setNickname('')
   }
 
   return (
@@ -95,6 +98,20 @@ export default function Login() {
           )}
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+            {mode === 'signup' && (
+              <div className="relative">
+                <User size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: 'var(--text)', opacity: 0.35, pointerEvents: 'none' }} />
+                <input
+                  type="text"
+                  value={nickname}
+                  onChange={e => setNickname(e.target.value)}
+                  placeholder="닉네임 (비워두면 이메일 앞부분 사용)"
+                  maxLength={20}
+                  className="w-full pl-10 pr-4 py-3 rounded-xl text-sm outline-none"
+                  style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--divider)', color: 'var(--text)' }}
+                />
+              </div>
+            )}
             <div className="relative">
               <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: 'var(--text)', opacity: 0.35, pointerEvents: 'none' }} />
               <input

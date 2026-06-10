@@ -26,6 +26,7 @@ export default function FreeDetail() {
       .eq('id', id)
       .single()
       .then(({ data }) => { setPost(data); setLoading(false) })
+    supabase.rpc('r04_increment_view', { post_id: id })
   }, [id])
 
   const isOwner = user && post && (user.id === post.author_id || isAdmin)

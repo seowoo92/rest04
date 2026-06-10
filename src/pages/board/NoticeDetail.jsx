@@ -26,6 +26,7 @@ export default function NoticeDetail() {
       .eq('id', id)
       .single()
       .then(({ data }) => { setNotice(data); setLoading(false) })
+    supabase.rpc('r04_increment_view', { post_id: id })
   }, [id])
 
   const handleDelete = async () => {
