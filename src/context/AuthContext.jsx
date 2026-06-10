@@ -31,7 +31,10 @@ export function AuthProvider({ children }) {
   const signInWithKakao = () =>
     supabase.auth.signInWithOAuth({
       provider: 'kakao',
-      options: { redirectTo: `${window.location.origin}/rest04/` },
+      options: {
+        scopes: 'profile_nickname profile_image',
+        redirectTo: `${window.location.origin}/rest04/`,
+      },
     })
 
   const isAdmin = user?.email === 'seowoo92@gmail.com'
