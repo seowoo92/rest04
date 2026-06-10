@@ -18,12 +18,12 @@ export default function DarkGlow() {
           width: '600px',
           height: '500px',
           borderRadius: '50%',
-          left: '15%',
-          top: '15%',
+          left: '-8%',
+          top: '-10%',
           background: dark
             ? 'radial-gradient(ellipse at center, rgba(255,111,94,0.18), transparent 70%)'
             : 'radial-gradient(ellipse at center, rgba(255,111,94,0.22), transparent 70%)',
-          animation: 'glowFloat1 14s ease-in-out infinite',
+          animation: 'glowFloat1 7s ease-in-out infinite',
         }}
       />
       <div
@@ -32,12 +32,12 @@ export default function DarkGlow() {
           width: '500px',
           height: '420px',
           borderRadius: '50%',
-          right: '10%',
-          bottom: '15%',
+          right: '-8%',
+          bottom: '-12%',
           background: dark
             ? 'radial-gradient(ellipse at center, rgba(245,178,62,0.14), transparent 70%)'
             : 'radial-gradient(ellipse at center, rgba(245,178,62,0.18), transparent 70%)',
-          animation: 'glowFloat2 18s ease-in-out infinite',
+          animation: 'glowFloat2 9s ease-in-out infinite',
         }}
       />
     </div>
