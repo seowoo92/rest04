@@ -11,7 +11,7 @@ export default function Layout({ title, children }) {
   return (
     <>
       {pathname !== '/' && <DarkGlow />}
-      <div style={{ minHeight: '100vh', position: 'relative', zIndex: 1 }}>
+      <div style={{ minHeight: '100vh', position: 'relative' }}>
         <Navbar dark={dark} toggleDark={toggleDark} />
         <main
           className="min-h-screen"

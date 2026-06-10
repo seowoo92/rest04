@@ -1,69 +1,44 @@
-import { useEffect, useRef } from 'react';
+import { useTheme } from '../context/ThemeContext';
 
 export default function DarkGlow() {
-  const canvasRef = useRef(null);
+  const { dark } = useTheme();
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    let animId;
-    let t = 0;
-    let isDark = document.documentElement.classList.contains('dark');
-
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resize();
-    window.addEventListener('resize', resize);
-
-    const observer = new MutationObserver(() => {
-      isDark = document.documentElement.classList.contains('dark');
-    });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      if (isDark) {
-        t += 0.003;
-        const x1 = canvas.width * 0.25 + Math.sin(t) * 80;
-        const y1 = canvas.height * 0.35 + Math.cos(t * 0.7) * 50;
-        const g1 = ctx.createRadialGradient(x1, y1, 0, x1, y1, 250);
-        g1.addColorStop(0, 'rgba(255,111,94,0.12)');
-        g1.addColorStop(1, 'rgba(255,111,94,0)');
-        ctx.fillStyle = g1;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        const x2 = canvas.width * 0.75 + Math.cos(t * 0.8) * 80;
-        const y2 = canvas.height * 0.65 + Math.sin(t * 1.1) * 50;
-        const g2 = ctx.createRadialGradient(x2, y2, 0, x2, y2, 200);
-        g2.addColorStop(0, 'rgba(245,178,62,0.09)');
-        g2.addColorStop(1, 'rgba(245,178,62,0)');
-        ctx.fillStyle = g2;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-      }
-      animId = requestAnimationFrame(draw);
-    };
-    draw();
-
-    return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener('resize', resize);
-      observer.disconnect();
-    };
-  }, []);
+  if (!dark) return null;
 
   return (
-    <canvas
-      ref={canvasRef}
+    <div
       style={{
         position: 'fixed',
         inset: 0,
         zIndex: 0,
         pointerEvents: 'none',
-        width: '100%',
-        height: '100%',
+        overflow: 'hidden',
       }}
-    />
+    >
+      <div
+        style={{
+          position: 'absolute',
+          width: '600px',
+          height: '500px',
+          borderRadius: '50%',
+          left: '15%',
+          top: '15%',
+          background: 'radial-gradient(ellipse at center, rgba(255,111,94,0.18), transparent 70%)',
+          animation: 'glowFloat1 9s ease-in-out infinite',
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          width: '500px',
+          height: '420px',
+          borderRadius: '50%',
+          right: '10%',
+          bottom: '15%',
+          background: 'radial-gradient(ellipse at center, rgba(245,178,62,0.14), transparent 70%)',
+          animation: 'glowFloat2 11s ease-in-out infinite',
+        }}
+      />
+    </div>
   );
 }

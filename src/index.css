@@ -71,3 +71,15 @@ div[id^="about-"] {
   to   { opacity: 0.08; }
 }
 
+@keyframes glowFloat1 {
+  0%, 100% { transform: translate(0, 0); }
+  33%      { transform: translate(40px, 25px); }
+  66%      { transform: translate(-25px, 35px); }
+}
+
+@keyframes glowFloat2 {
+  0%, 100% { transform: translate(0, 0); }
+  33%      { transform: translate(-30px, -20px); }
+  66%      { transform: translate(25px, -30px); }
+}
+
