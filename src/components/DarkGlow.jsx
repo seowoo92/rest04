@@ -2,9 +2,6 @@ import { useTheme } from '../context/ThemeContext';
 
 export default function DarkGlow() {
   const { dark } = useTheme();
-
-  if (!dark) return null;
-
   return (
     <div
       style={{
@@ -23,7 +20,9 @@ export default function DarkGlow() {
           borderRadius: '50%',
           left: '15%',
           top: '15%',
-          background: 'radial-gradient(ellipse at center, rgba(255,111,94,0.18), transparent 70%)',
+          background: dark
+            ? 'radial-gradient(ellipse at center, rgba(255,111,94,0.18), transparent 70%)'
+            : 'radial-gradient(ellipse at center, rgba(255,111,94,0.10), transparent 70%)',
           animation: 'glowFloat1 14s ease-in-out infinite',
         }}
       />
@@ -35,7 +34,9 @@ export default function DarkGlow() {
           borderRadius: '50%',
           right: '10%',
           bottom: '15%',
-          background: 'radial-gradient(ellipse at center, rgba(245,178,62,0.14), transparent 70%)',
+          background: dark
+            ? 'radial-gradient(ellipse at center, rgba(245,178,62,0.14), transparent 70%)'
+            : 'radial-gradient(ellipse at center, rgba(245,178,62,0.09), transparent 70%)',
           animation: 'glowFloat2 18s ease-in-out infinite',
         }}
       />
