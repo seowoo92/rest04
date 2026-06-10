@@ -12,6 +12,7 @@
 - react-router-dom (BrowserRouter, `basename="/rest04"`)
 - lucide-react (아이콘 전용, 이모지 절대 사용 금지)
 - 폰트: IBM Plex Sans KR (Google Fonts)
+- @supabase/supabase-js (인증 + DB)
 
 ## 컬러 팔레트
 라이트 모드 (:root): 배경 #FAF6F0 / 텍스트 #2A2D43 / 코랄 #FF6F5E / 머스타드 #F5B23E / 카드 #FFFFFF / 구분선 #ECE6DC
@@ -35,10 +36,12 @@
 ## 파일 구조
 src/assets/ - 이미지 (hero.jpg, logo.svg, logo-dark.svg)
 src/components/ - Navbar.jsx, Footer.jsx, Layout.jsx, PageHeader.jsx, DarkGlow.jsx
-src/context/ - ThemeContext.jsx (다크모드 상태, localStorage 저장/복원)
+src/context/ - ThemeContext.jsx (다크모드 상태), AuthContext.jsx (인증 상태)
 src/data/ - helpers.js, reviews.js (목 데이터, 추후 DB 교체 예정)
 src/hooks/ - useSnapScroll.js
-src/pages/ - Home.jsx, AboutCeo.jsx, AboutVision.jsx, AboutHistory.jsx, AboutBrand.jsx, Services.jsx, ServicesHow.jsx, Reviews.jsx, Contact.jsx
+src/lib/ - supabase.js (Supabase 클라이언트 + redirectURL())
+src/pages/ - Home.jsx, AboutCeo.jsx, AboutVision.jsx, AboutHistory.jsx, AboutBrand.jsx, Services.jsx, ServicesHow.jsx, Reviews.jsx, Contact.jsx, Login.jsx
+src/pages/board/ - NoticeList.jsx, NoticeDetail.jsx, FreeList.jsx, FreeDetail.jsx, BoardWrite.jsx
 src/utils/ - submitContact.js
 web_assets/ - GitHub 업로드 원본 이미지
 docs/devlog/ - 개발일지 (YYYY-MM-DD.md)
@@ -53,10 +56,20 @@ docs/devlog/ - 개발일지 (YYYY-MM-DD.md)
 /services/how → ServicesHow
 /reviews → Reviews
 /contact → Contact
+/login → Login
+/board/notice → NoticeList
+/board/notice/write → BoardWrite
+/board/notice/:id → NoticeDetail
+/board/notice/:id/edit → BoardWrite
+/board/free → FreeList
+/board/free/write → BoardWrite
+/board/free/:id → FreeDetail
+/board/free/:id/edit → BoardWrite
 
 ## 네비바 메뉴 구조
 - 회사소개: CEO 인사말, 비전·가치, 연혁, 브랜드 소개
 - 서비스: 이용 방법, 전체보기
+- 게시판: 공지사항, 자유게시판
 - 이용후기: 이용후기
 - 문의하기: 문의하기
 
@@ -82,9 +95,52 @@ Layout.jsx에서 자동 적용 (홈 `/` 제외, 모든 서브 페이지).
 - position: fixed, zIndex: 0 — Layout 래퍼 div에 절대로 `position: relative` 추가하지 말 것
   (stacking context 생성 시 fixed 동작이 깨짐)
 
+## Supabase 인증
+
+### AuthContext (src/context/AuthContext.jsx)
+- `useAuth()` 훅으로 전역 인증 상태 접근
+- 제공값: `{ user, profile, isAdmin, isLoggedIn, loading, signIn, signUp, signInWithKakao, signOut, reloadProfile }`
+- `isAdmin`: `profile.role === 'admin'` (DB 기반, 하드코딩 금지)
+- 최초 로그인 시 `r04_profiles`에 프로필 자동 생성 (트리거 없이 클라이언트 처리)
+
+### supabase.js (src/lib/supabase.js)
+- `flowType: 'pkce'` 필수 (GitHub Pages OAuth 세션 복원)
+- `redirectURL()`: `window.location.origin + BASE_URL` 반환
+
+### Admin 계정 설정 (최초 1회)
+```sql
+-- 카카오 로그인(이메일 NULL)의 경우 ID 직접 사용
+update public.r04_profiles set role = 'admin'
+where id = '6b393893-7db3-44e9-bdbb-5c2d8e728a41';
+```
+
+## Supabase DB 스키마 (r04_ 접두어)
+
+### 테이블 목록
+- `r04_profiles`: 유저 프로필 (id, nickname, role)
+- `r04_posts`: 게시글 (category: 'notice'|'free'|'qna', author_id, author_name, view_count, comment_count)
+- `r04_comments`: 댓글 (post_id, author_id, author_name, is_answer)
+
+### 주요 DB 함수
+- `r04_is_admin()`: 현재 유저 admin 여부 (RLS 정책에서 사용)
+- `r04_sync_comment_count()`: 댓글 수 자동 갱신 트리거
+- `r04_increment_view(post_id)`: 조회수 +1
+
+### 게시판 권한
+- 공지사항 작성: admin만
+- 자유게시판 작성: 로그인 유저
+- 수정/삭제: 작성자 본인 또는 admin
+- 읽기: 누구나
+
 ## 데이터 구조
 
-### reviews.js 필드
+### r04_posts 필드
+```js
+{ id, category, title, content, author_id, author_name, view_count, comment_count, created_at, updated_at }
+// category 값: 'notice' | 'free' | 'qna'
+```
+
+### reviews.js 필드 (목 데이터)
 ```js
 { id, name, initial, rating, type, content, date }
 // type 값: '가구 조립' | '벌레 처치' | '짐 옮기기' | '전구 교체' | '간단 청소' | '기타 생활 도움'
@@ -100,6 +156,7 @@ Layout.jsx에서 자동 적용 (홈 `/` 제외, 모든 서브 페이지).
 ## 개발 규칙
 - 작업 완료 후 항상: git add → git commit → git push
 - 배포 시: npm run build && npm run deploy
-- 개발일지: docs/devlog/YYYY-MM-DD.md 형식으로 작성
+- 개발일지: docs/devlog/YYYY-MM-DD.md 형식으로 작성 (같은 날 주제가 다르면 YYYY-MM-DD-주제.md로 분리)
 - 데이터는 src/data/ 배열로 분리 (나중에 DB 교체 예정)
 - 새 페이지 추가 시: App.jsx 라우트 추가 + Navbar 메뉴 구조 확인
+- 환경변수: .env.local에 저장 (VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY), gitignore 처리됨
