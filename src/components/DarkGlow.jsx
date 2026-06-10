@@ -22,7 +22,7 @@ export default function DarkGlow() {
           top: '15%',
           background: dark
             ? 'radial-gradient(ellipse at center, rgba(255,111,94,0.18), transparent 70%)'
-            : 'radial-gradient(ellipse at center, rgba(255,111,94,0.10), transparent 70%)',
+            : 'radial-gradient(ellipse at center, rgba(255,111,94,0.22), transparent 70%)',
           animation: 'glowFloat1 14s ease-in-out infinite',
         }}
       />
@@ -36,7 +36,7 @@ export default function DarkGlow() {
           bottom: '15%',
           background: dark
             ? 'radial-gradient(ellipse at center, rgba(245,178,62,0.14), transparent 70%)'
-            : 'radial-gradient(ellipse at center, rgba(245,178,62,0.09), transparent 70%)',
+            : 'radial-gradient(ellipse at center, rgba(245,178,62,0.18), transparent 70%)',
           animation: 'glowFloat2 18s ease-in-out infinite',
         }}
       />
