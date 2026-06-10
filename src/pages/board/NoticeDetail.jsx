@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { ChevronLeft, Pencil, Trash2 } from 'lucide-react'
 import Layout from '../../components/Layout'
 import PageHeader from '../../components/PageHeader'
+import CommentSection from '../../components/CommentSection'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../context/AuthContext'
 
@@ -80,6 +81,8 @@ export default function NoticeDetail() {
             </div>
           </article>
         )}
+
+        {notice && <CommentSection postId={id} />}
 
         <div className="mt-6">
           <button
