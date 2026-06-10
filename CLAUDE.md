@@ -35,7 +35,7 @@
 
 ## 파일 구조
 src/assets/ - 이미지 (hero.jpg, logo.svg, logo-dark.svg)
-src/components/ - Navbar.jsx, Footer.jsx, Layout.jsx, PageHeader.jsx, DarkGlow.jsx
+src/components/ - Navbar.jsx, Footer.jsx, Layout.jsx, PageHeader.jsx, DarkGlow.jsx, CommentSection.jsx
 src/context/ - ThemeContext.jsx (다크모드 상태), AuthContext.jsx (인증 상태)
 src/data/ - helpers.js, reviews.js (목 데이터, 추후 DB 교체 예정)
 src/hooks/ - useSnapScroll.js
@@ -131,6 +131,15 @@ where id = '6b393893-7db3-44e9-bdbb-5c2d8e728a41';
 - 자유게시판 작성: 로그인 유저
 - 수정/삭제: 작성자 본인 또는 admin
 - 읽기: 누구나
+- 댓글 작성: 로그인 유저 (`CommentSection.jsx` 공용 컴포넌트 사용)
+- 조회수: 상세 페이지 진입 시 `supabase.rpc('r04_increment_view', { post_id })` 자동 호출
+
+### CommentSection 사용법
+```jsx
+import CommentSection from '../../components/CommentSection'
+// 상세 페이지 하단에 추가 (게시글 로드 후 조건부 렌더)
+{post && <CommentSection postId={id} />}
+```
 
 ## 데이터 구조
 
